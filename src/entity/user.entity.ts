@@ -2,7 +2,7 @@ import mongoose, { Model, Schema, Query } from "mongoose"
 import validator from "validator"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
-import { UserDocument } from "../extensions/utils/types/user.type"
+import { UserDocument, UserRoleEnum } from "../extensions/utils/types/user.type"
 import { JWT_EXPIRES, JWT_SECRET } from "../config/app.keys"
 import crypto from "crypto"
 
@@ -44,8 +44,8 @@ const userSchema: Schema<UserDocument> = new mongoose.Schema({
   ],
   role: {
     type: String,
-    enum: ["ADMIN", "USER"],
-    default: "USER",
+    enum: ["ADMIN", "USER", "STAFF", "RIDER", "GUEST"],
+    default: UserRoleEnum.USER,
   },
   createdAt: {
     type: Date,

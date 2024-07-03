@@ -10,7 +10,7 @@ export interface UserDocument extends Document {
   cart: Cart[]
   createdAt: Date
   resetPasswordToken: string | null
-  role: role
+  role: UserRoleEnum
   resetPasswordExpire: Date | null
   passwordChangedAt: Date
   active: boolean
@@ -34,4 +34,11 @@ interface Cart {
   stock: string
 }
 
-type role = "ADMIN" | "USER"
+// type role = "ADMIN" | "USER"
+export enum UserRoleEnum {
+  ADMIN = "ADMIN",
+  USER = "USER",
+  GUEST = "GUEST",
+  STAFF = "STAFF",
+  RIDER = "RIDER",
+}

@@ -11,6 +11,9 @@ export interface OrderDocument extends Document {
   totalPrice: number
   paidAt: Date
   orderStatus: OrderStatus
+  deliveredAt: Date
+  createdAt: Date
+  updated_at: Date
 }
 
 interface ShippingInfo {
@@ -36,4 +39,10 @@ interface PaymentInfo {
   transaction: string
 }
 
-type OrderStatus = "PROCESSING" | "DELIVERED" | "ON TRANSIT" | "IN PROGRESS"
+// type OrderStatus = "PROCESSING" | "DELIVERED" | "ON TRANSIT" | "IN PROGRESS"
+export enum OrderStatus {
+  PROCESSING = "PROCESSING",
+  DELIVERED = "DELIVERED",
+  TRANSIT = "ON TRANSIT",
+  IN_PROGRESS = "IN PROGRESS",
+}
