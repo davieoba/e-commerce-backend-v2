@@ -15,9 +15,9 @@ export interface UserDocument extends Document {
   passwordChangedAt: Date
   active: boolean
   refreshToken: string
-  deliveryAddress: (typeof mongoose.Schema.Types.ObjectId)[]
-  orders: (typeof mongoose.Schema.Types.ObjectId)[]
-  reviews: (typeof mongoose.Schema.Types.ObjectId)[]
+  deliveryAddress: mongoose.Types.ObjectId[]
+  orders: mongoose.Types.ObjectId[]
+  reviews: mongoose.Types.ObjectId[]
   updated_at: Date
   getJWTToken: () => string
   comparePassword: (password: string) => boolean

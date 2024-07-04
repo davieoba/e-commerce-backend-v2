@@ -2,7 +2,7 @@ import mongoose, { Document } from "mongoose"
 
 export interface OrderDocument extends Document {
   shippingInfo: ShippingInfo
-  user: typeof mongoose.Schema.Types.ObjectId
+  user: mongoose.Types.ObjectId
   orderItems: OrderItem[]
   paymentInfo: PaymentInfo
   taxPrice: number
@@ -27,7 +27,7 @@ interface ShippingInfo {
 interface OrderItem {
   quantity: number
   price: number
-  product: typeof mongoose.Schema.Types.ObjectId
+  product: mongoose.Types.ObjectId
   name: string
   image: string
 }

@@ -10,8 +10,8 @@ export interface ProductDocument extends Document {
   seller: string
   stock: number
   numOfReviews: number
-  reviews: (typeof mongoose.Schema.Types.ObjectId)[]
-  user: typeof mongoose.Schema.Types.ObjectId
+  reviews: mongoose.Types.ObjectId[]
+  user: mongoose.Types.ObjectId
   createdAt: Date
   flashSale: boolean
   discount: number
