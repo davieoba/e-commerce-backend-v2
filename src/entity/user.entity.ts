@@ -7,7 +7,7 @@ import { JWT_EXPIRES, JWT_SECRET } from "../config/app.keys"
 import { UserDocument, UserRoleEnum } from "../extensions/utils/types/user.type"
 
 const userSchema: Schema<UserDocument> = new mongoose.Schema({
-  name: {
+  firstName: {
     type: String,
     required: [true, "Please enter your name"],
     maxLength: [30, "Your name cannot exceed 30 characters"],

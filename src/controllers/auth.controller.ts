@@ -1,48 +1,49 @@
-import jwt, { JwtPayload } from "jsonwebtoken"
-import crypto from "crypto"
 import bcrypt from "bcryptjs"
+import crypto from "crypto"
 import { NextFunction, Request, Response } from "express"
-import User from "../entity/user.entity"
-import AppError from "../extensions/libs/app-error"
-import catchAsync from "../extensions/libs/catch-async"
-import sendToken from "../extensions/helpers/send-token"
+import jwt, { JwtPayload } from "jsonwebtoken"
 import {
   ACCESS_TOKEN_EXPIRY,
   ACCESS_TOKEN_SECRET,
   REFRESH_TOKEN_SECRET,
 } from "../config/app.keys"
-import { loginSchema, registerSchema } from "../extensions/schemas/auth.schema"
+import User from "../entity/user.entity"
+import sendToken from "../extensions/helpers/send-token"
+import AppError from "../extensions/libs/app-error"
+import catchAsync from "../extensions/libs/catch-async"
+import {
+  validateLoginSchema,
+  validateRegisterSchema,
+} from "../extensions/schemas/auth.schema"
 
 class AuthController {
   static register = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-      const { error, value } = registerSchema.validate(req.body)
-      if (error) {
-        return new AppError(error.details[0].message, 400)
+      const { success, error, data } = validateRegisterSchema(req)
+      if (!success && error) {
+        return next(new AppError(error, 400))
       }
 
-      const { name, email, password } = value
+      const { firstName, lastName, email, password } = data!
       const existingUser = await User.findOne({ email })
       if (existingUser) {
         return next(new AppError("Email already in use", 400))
       }
-
-      const user = await User.create({ name, email, password })
+      const user = await User.create({ firstName, lastName, email, password })
       if (!user) {
         return next(new AppError("Bad Request, try again!", 400))
       }
-
       sendToken(user, 201, res)
     }
   )
 
   static login = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-      const { error, value } = loginSchema.validate(req.body)
-      if (error) {
-        return new AppError(error.details[0].message, 400)
+      const { success, error, data } = validateLoginSchema(req)
+      if (error && !success) {
+        return next(new AppError(error, 400))
       }
-      const { email, password } = value
+      const { email, password } = data!
       const user = await User.findOne({ email: email }).select("+password")
       if (!user) return next(new AppError("Invalid email or password", 401))
       const auth = user.comparePassword(password)
@@ -88,7 +89,7 @@ class AuthController {
           message: "success",
           user: {
             _id: user._id,
-            name: user.name,
+            name: user.firstName,
             email: user.email,
             token: accessToken,
             role: user.role,
@@ -171,7 +172,7 @@ class AuthController {
 
       try {
         const userDetails = {
-          name: user.name,
+          name: user.firstName,
           email: user.email,
         }
         // Todo: SEND EMAIL TO THE USER

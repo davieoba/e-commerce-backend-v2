@@ -1,7 +1,8 @@
 import mongoose, { Document, mongo } from "mongoose"
 
 export interface UserDocument extends Document {
-  name: string
+  firstName: string
+  lastName: string
   googleId: string
   email: string
   password: string
