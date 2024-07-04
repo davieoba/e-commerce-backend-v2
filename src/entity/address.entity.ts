@@ -1,6 +1,5 @@
 import mongoose, { Model, Schema } from "mongoose"
 import { AddressDocument } from "../extensions/utils/types/address.type"
-import { NextFunction } from "express"
 
 const addressSchema: Schema<AddressDocument> = new mongoose.Schema({
   firstName: {

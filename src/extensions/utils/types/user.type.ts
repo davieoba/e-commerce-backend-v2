@@ -1,4 +1,4 @@
-import mongoose, { Document, mongo } from "mongoose"
+import mongoose, { Document } from "mongoose"
 import { AddressDocument } from "./address.type"
 
 export interface UserDocument extends Document {
