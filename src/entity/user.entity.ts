@@ -88,6 +88,11 @@ const userSchema: Schema<UserDocument> = new mongoose.Schema({
 })
 
 userSchema.pre("save", async function (next) {
+  this.updated_at = new Date(Date.now())
+  next()
+})
+
+userSchema.pre("save", async function (next) {
   // if the password is not modified then I dont't have to encrypt it
   if (!this.isModified("password")) {
     return next()

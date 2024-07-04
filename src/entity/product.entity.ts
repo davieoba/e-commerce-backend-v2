@@ -110,6 +110,11 @@ const productSchema: Schema<ProductDocument> = new mongoose.Schema({
   },
 })
 
+productSchema.pre("save", async function (next) {
+  this.updated_at = new Date(Date.now())
+  next()
+})
+
 const Product: Model<ProductDocument> = mongoose.model<ProductDocument>(
   "Product",
   productSchema

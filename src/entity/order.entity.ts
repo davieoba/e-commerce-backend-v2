@@ -79,6 +79,11 @@ const orderSchema: Schema<OrderDocument> = new mongoose.Schema({
   },
 })
 
+orderSchema.pre("save", async function (next) {
+  this.updated_at = new Date(Date.now())
+  next()
+})
+
 const Order: Model<OrderDocument> = mongoose.model<OrderDocument>(
   "Order",
   orderSchema

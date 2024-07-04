@@ -1,4 +1,5 @@
 import mongoose, { Document, mongo } from "mongoose"
+import { AddressDocument } from "./address.type"
 
 export interface UserDocument extends Document {
   firstName: string
@@ -16,7 +17,7 @@ export interface UserDocument extends Document {
   passwordChangedAt: Date
   active: boolean
   refreshToken: string
-  deliveryAddress: mongoose.Types.ObjectId[]
+  deliveryAddress: mongoose.Types.ObjectId[] | AddressDocument[]
   orders: mongoose.Types.ObjectId[]
   reviews: mongoose.Types.ObjectId[]
   updated_at: Date

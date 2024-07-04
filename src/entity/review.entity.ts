@@ -32,6 +32,11 @@ const reviewSchema: Schema<ReviewDocument> = new mongoose.Schema({
   },
 })
 
+reviewSchema.pre("save", async function (next) {
+  this.updated_at = new Date(Date.now())
+  next()
+})
+
 const Review: Model<ReviewDocument> = mongoose.model<ReviewDocument>(
   "Review",
   reviewSchema
