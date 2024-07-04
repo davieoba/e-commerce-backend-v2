@@ -1,23 +1,21 @@
 import { Request } from "express"
-import * as joi from "joi"
+import joi from "joi"
 
 interface ValidationResult {
   success: boolean
   error?: string
   data?: {
     subject: string
-    user: string
     rating: number
-    product: string
+    productId: string
     userReview: string
   }
 }
 
 const reviewSchema = joi.object({
   subject: joi.string().required(),
-  user: joi.string().required(),
   rating: joi.number().required(),
-  product: joi.string().required(),
+  productId: joi.string().required(),
   userReview: joi.string().required(),
 })
 

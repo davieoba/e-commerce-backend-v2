@@ -1,5 +1,5 @@
 import { Request } from "express"
-import * as joi from "joi"
+import joi from "joi"
 
 interface ValidationResult {
   success: boolean
