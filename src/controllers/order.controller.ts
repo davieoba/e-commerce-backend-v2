@@ -1,11 +1,11 @@
+import { NextFunction, Request, Response } from "express"
+import mongoose from "mongoose"
 import Order from "../entity/order.entity"
 import Product from "../entity/product.entity"
 import User from "../entity/user.entity"
-import catchAsync from "../extensions/libs/catch-async"
 import AppError from "../extensions/libs/app-error"
-import { NextFunction, Request, Response } from "express"
+import catchAsync from "../extensions/libs/catch-async"
 import { validateCreateOrderRequest } from "../extensions/schemas/order.schema"
-import mongoose from "mongoose"
 
 class OrderController {
   static createOrder = catchAsync(
@@ -95,6 +95,88 @@ class OrderController {
       })
     }
   )
+
+  static getOrder = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const order = await Order.findById(req.params.id).populate(
+        "user",
+        "name email"
+      )
+      if (!order) return next(new AppError("No order found with this id", 404))
+      res.status(200).json({
+        message: "success",
+        data: {
+          order,
+        },
+      })
+    }
+  )
+
+  static getMyOrder = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      if (!req.user) return next(new AppError("User not found", 404))
+      const order = await Order.find({ user: req.user.id })
+
+      res.status(200).json({
+        message: "success",
+        data: {
+          order,
+        },
+      })
+    }
+  )
+
+  static getAllOrders = catchAsync(
+    async (_req: Request, res: Response, _next: NextFunction) => {
+      const orders = await Order.find()
+        .populate("orderItems.product")
+        .populate("user")
+
+      let totalAmount = 0
+
+      orders.forEach((order) => {
+        totalAmount += order.totalPrice
+      })
+
+      res.status(200).json({
+        message: "success",
+        length: orders.length,
+        data: {
+          orders,
+          totalAmount,
+        },
+      })
+    }
+  )
+
+  static updateOrder = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const id = req.params.id
+      const order = await Order.findById(id)
+      if (!order) return next(new AppError("No Order found", 404))
+      if (order.orderStatus === "DELIVERED") {
+        return next(new AppError("Order cannot be changed", 400))
+      }
+
+      order.orderItems.forEach(async (item) => {
+        await OrderController.updateStock(item.product, item.quantity)
+      })
+      order.orderStatus = req.body.status
+      order.deliveredAt = new Date(Date.now())
+      await order.save()
+
+      res.status(200).json({
+        message: "success",
+      })
+    }
+  )
+
+  static async updateStock(id: mongoose.Types.ObjectId, quantity: number) {
+    const product = await Product.findById(id)
+    if (!product) return
+    product.stock = product?.stock - quantity
+    await product?.save({ validateBeforeSave: false })
+  }
 }
 
 export default OrderController

@@ -1,10 +1,10 @@
-import mongoose, { Model, Schema, Query } from "mongoose"
-import validator from "validator"
 import bcrypt from "bcryptjs"
-import jwt from "jsonwebtoken"
-import { UserDocument, UserRoleEnum } from "../extensions/utils/types/user.type"
-import { JWT_EXPIRES, JWT_SECRET } from "../config/app.keys"
 import crypto from "crypto"
+import jwt from "jsonwebtoken"
+import mongoose, { Model, Query, Schema } from "mongoose"
+import validator from "validator"
+import { JWT_EXPIRES, JWT_SECRET } from "../config/app.keys"
+import { UserDocument, UserRoleEnum } from "../extensions/utils/types/user.type"
 
 const userSchema: Schema<UserDocument> = new mongoose.Schema({
   name: {

@@ -1,6 +1,5 @@
-import * as joi from "joi"
-import AppError from "../libs/app-error"
 import { Request } from "express"
+import * as joi from "joi"
 
 interface ValidationResult {
   success: boolean
